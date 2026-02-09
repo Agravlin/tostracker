@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -7,6 +7,47 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <datalist id="role-list">
+    <option value="Jailor">
+    <option value="Veteran">
+    <option value="Vigilante">
+
+    <option value="Investigator">
+    <option value="Lookout">
+    <option value="Sheriff">
+    <option value="Spy">
+
+    <option value="Bodyguard">
+    <option value="Doctor">
+
+    <option value="Tavern Keeper">
+    <option value="Mayor">
+    <option value="Medium">
+    <option value="Retributionist">
+    <option value="Transporter">
+
+    <option value="Godfather">
+    <option value="Mafioso">
+    
+    <option value="Blackmailer">
+    <option value="Consigliere">
+    <option value="Bootlegger">
+    
+    <option value="Ambusher">
+    <option value="Disguiser">
+    <option value="Forger">
+    <option value="Framer">
+    <option value="Hypnotist"> 
+    <option value="Janitor">
+       
+    <option value="Serial Killer">
+    <option value="Arsonist">
+    <option value="Werewolf">
+
+    <option value="Jester">
+    <option value="Executioner">
+    <option value="Witch">  
+  </datalist>
   <main class="app">
     <header class="topbar">
       <h1>Town of Salem Tracker</h1>
@@ -30,10 +71,12 @@
         <tbody>
           <tr>
             <td class="num">1</td>
-            <td><input class="cell-input" placeholder="Claim..." /></td>
+            <td>
+              <input class="cell-input" list="role-list" placeholder="Claim..." />
+            </td>
             <td><input class="cell-input" placeholder="Will..." /></td>
             <td><input class="cell-input" placeholder="Info..." /></td>
-            <td class="xcell"><button class="xbtn" type="button">X</button></td>
+            <td class="xcell"><button class="xbtn">X</button></td>
           </tr>
           <tr>
             <td class="num">2</td>
