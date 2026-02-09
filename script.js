@@ -86,3 +86,20 @@ document.querySelectorAll(".tos-table tbody tr").forEach(row => {
     }
   });
 });
+
+document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
+  document.querySelectorAll(".tos-table tbody tr").forEach(row => {
+    row.querySelectorAll("input.cell-input").forEach(i => {
+      i.value = "";
+      i.disabled = false;
+    });
+
+    const cb = row.querySelector(".dead-checkbox");
+    cb.checked = false;
+
+    row.classList.remove("dead");
+  });
+
+  document.querySelectorAll(".role-table .slot-num, .role-table .slot-claim")
+    .forEach(td => td.textContent = "");
+});
