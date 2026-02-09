@@ -106,3 +106,17 @@ th{
 tr.dead {
   opacity: 0.5;
 }
+
+.cell-input {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+}
+
+textarea.cell-input {
+  min-height: 1.8em;
+  height: 1.8em;
+  padding: 2px 4px;
+  line-height: 1.2;
+  resize: vertical;
+}
