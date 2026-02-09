@@ -15,7 +15,7 @@ const primarySlot = {
   Transporter: "Random Town",
   Veteran: "Random Town",
   Vigilante: "Random Town",
-  TavernKeeper: "Random Town",
+  "Tavern Keeper": "Random Town",
 };
 
 const fallbackSlot = {
@@ -69,5 +69,20 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
 
     target.querySelector(".slot-num").textContent = num;
     target.querySelector(".slot-claim").textContent = claim;
+  });
+});
+
+document.querySelectorAll(".tos-table tbody tr").forEach(row => {
+  const checkbox = row.querySelector(".dead-checkbox");
+  const inputs = row.querySelectorAll("input.cell-input");
+
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      row.classList.add("dead");
+      inputs.forEach(i => i.disabled = true);
+    } else {
+      row.classList.remove("dead");
+      inputs.forEach(i => i.disabled = false);
+    }
   });
 });
