@@ -76,8 +76,9 @@ function addToNotFitting(playerNum, claim) {
 document.querySelectorAll('.tos-table tbody tr').forEach(row => {
   const num = row.querySelector('.num').textContent.trim();
   const claimInput = row.querySelector('input[list="role-list"]');
+  const deadCheckbox = row.querySelector('.dead-checkbox');
 
-  claimInput.addEventListener('input', () => {
+  const updateAssignment = () => {
     let claim = claimInput.value.trim();
     if (!claim) { clearAssignment(num); return; }
 
@@ -95,7 +96,48 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
     const main = primarySlot[claim];
     if (!main) return;
 
+    const isDead = deadCheckbox.checked;
     let target = findFreeRow(main);
+
+    if (isDead && !target) {
+      const occupiedRows = [...document.querySelectorAll(`.role-table tbody tr[data-role="${main}"]`)];
+      const occupiedByAlive = occupiedRows.find(r => {
+        const slotNum = r.querySelector(".slot-num")?.textContent.trim();
+        if (!slotNum) return false;
+        const allTosRows = document.querySelectorAll('.tos-table tbody tr');
+        for (let tosRow of allTosRows) {
+          const rowNum = tosRow.querySelector('.num').textContent.trim();
+          const isDeadRow = tosRow.querySelector('.dead-checkbox').checked;
+          if (rowNum === slotNum && !isDeadRow) {
+            return true;
+          }
+        }
+        return false;
+      });
+      
+      if (occupiedByAlive) {
+        const occupiedSlotNum = occupiedByAlive.querySelector(".slot-num").textContent.trim();
+        const occupiedClaim = occupiedByAlive.querySelector(".slot-claim").textContent.trim();
+        
+        occupiedByAlive.querySelector(".slot-num").textContent = "";
+        occupiedByAlive.querySelector(".slot-claim").textContent = "";
+        
+        const fb = fallbackSlot[main];
+        if (fb) {
+          const fallbackTarget = findFreeRow(fb);
+          if (fallbackTarget) {
+            fallbackTarget.querySelector(".slot-num").textContent = occupiedSlotNum;
+            fallbackTarget.querySelector(".slot-claim").textContent = occupiedClaim;
+          } else {
+            addToNotFitting(occupiedSlotNum, occupiedClaim);
+          }
+        } else {
+          addToNotFitting(occupiedSlotNum, occupiedClaim);
+        }
+        
+        target = occupiedByAlive;
+      }
+    }
 
     if (!target) {
       const fb = fallbackSlot[main];
@@ -109,7 +151,16 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
 
     target.querySelector(".slot-num").textContent = num;
     target.querySelector(".slot-claim").textContent = claim;
-  });
+    
+    if (isDead) {
+      target.classList.add('dead-slot');
+    } else {
+      target.classList.remove('dead-slot');
+    }
+  };
+
+  claimInput.addEventListener('input', updateAssignment);
+  deadCheckbox.addEventListener('change', updateAssignment);
 });
 
 document.querySelectorAll(".tos-table tbody tr").forEach(row => {
@@ -118,16 +169,56 @@ document.querySelectorAll(".tos-table tbody tr").forEach(row => {
 
   checkbox.addEventListener("change", () => {
     if (checkbox.checked) {
+      const tbody = document.querySelector('.tos-table tbody');
+      const allRows = Array.from(tbody.querySelectorAll('tr'));
+      row.dataset.originalPosition = allRows.indexOf(row);
+      
       row.classList.add("dead");
       inputs.forEach(i => i.disabled = true);
+      
+      reorderRows();
+      
+      const claimInput = row.querySelector('input[list="role-list"]');
+      if (claimInput.value.trim()) {
+        claimInput.dispatchEvent(new Event('input'));
+      }
     } else {
       row.classList.remove("dead");
       inputs.forEach(i => i.disabled = false);
+      
+      restoreOriginalPosition(row);
+      
+      const claimInput = row.querySelector('input[list="role-list"]');
+      if (claimInput.value.trim()) {
+        claimInput.dispatchEvent(new Event('input'));
+      }
     }
-    
-    reorderRows();
   });
 });
+
+function restoreOriginalPosition(row) {
+  const tbody = document.querySelector('.tos-table tbody');
+  const originalPosition = parseInt(row.dataset.originalPosition);
+  
+  if (isNaN(originalPosition)) {
+    reorderRows();
+    return;
+  }
+  
+  tbody.removeChild(row);
+  
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  
+  const targetIndex = Math.min(originalPosition, allRows.length);
+  
+  if (targetIndex >= allRows.length) {
+    tbody.appendChild(row);
+  } else {
+    tbody.insertBefore(row, allRows[targetIndex]);
+  }
+  
+  delete row.dataset.originalPosition;
+}
 
 function reorderRows() {
   const tbody = document.querySelector('.tos-table tbody');
@@ -158,6 +249,12 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
 
   document.querySelectorAll(".role-table .slot-num, .role-table .slot-claim")
     .forEach(td => td.textContent = "");
+  
+  const notFittingList = document.querySelector('.not-fitting-list');
+  if (notFittingList) {
+    notFittingList.innerHTML = '';
+    document.querySelector('.not-fitting-section').style.display = 'none';
+  }
   
   deletedRowState = null;
   undoBtn.disabled = true;
@@ -230,6 +327,28 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
       
       const newPosition = start + cleanedText.length;
       textarea.setSelectionRange(newPosition, newPosition);
+      
+      autoGrowTextarea(textarea);
+    });
+    
+    textarea.addEventListener('input', () => {
+      autoGrowTextarea(textarea);
+    });
+    
+    textarea.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        setTimeout(() => {
+          autoGrowTextarea(textarea);
+        }, 0);
+      }
     });
   });
 });
+
+function autoGrowTextarea(textarea) {
+  textarea.style.height = '1.8em';
+  const scrollHeight = textarea.scrollHeight;
+  if (scrollHeight > textarea.clientHeight) {
+    textarea.style.height = scrollHeight + 'px';
+  }
+}
