@@ -69,17 +69,8 @@ th{
   border-radius:6px;
   color:var(--text);
   padding:6px 8px;
-}
-
-.xcell{text-align:center}
-.xbtn{
-  background:#222;
-  color:#fff;
-  border:1px solid #444;
-  border-radius:6px;
-  width:32px;
-  height:32px;
-  cursor:pointer;
+  box-sizing: border-box;
+  font: inherit;
 }
 
 .role-table th{text-align:center}
@@ -94,6 +85,42 @@ th{
   cursor:pointer;
 }
 
+.btn:disabled{
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-undo{
+  margin-right: 8px;
+}
+
+.deletecell {
+  text-align: center;
+  width: 60px;
+}
+
+.delete-btn {
+  background: #ff3b3b;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1;
+  padding: 0;
+}
+
+.delete-btn:hover {
+  background: #ff5555;
+}
+
+tr.deleted {
+  display: none;
+}
+
 .deadcell {
   text-align: center;
 }
@@ -105,12 +132,6 @@ th{
 
 tr.dead {
   opacity: 0.5;
-}
-
-.cell-input {
-  width: 100%;
-  box-sizing: border-box;
-  font: inherit;
 }
 
 textarea.cell-input {

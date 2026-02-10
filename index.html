@@ -52,7 +52,10 @@
 
     <header class="topbar">
       <h1>Town of Salem Tracker</h1>
-      <button class="btn btn-ghost" type="button">Reset</button>
+      <div>
+        <button class="btn btn-undo" type="button" disabled>Undo Delete</button>
+        <button class="btn btn-ghost" type="button">Reset</button>
+      </div>
     </header>
 
     <section class="tables">
@@ -66,24 +69,25 @@
             <th class="col-will">Will</th>
             <th class="col-info">Info</th>
             <th class="col-dead">Dead</th>
+            <th class="col-delete">Delete</th>
           </tr>
         </thead>
         <tbody>
-          <tr><td class="num">1</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">2</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">3</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">4</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">5</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">6</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">7</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">8</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">9</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">10</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">11</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">12</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">13</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">14</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
-          <tr><td class="num">15</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td></tr>
+          <tr><td class="num">1</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="1">×</button></td></tr>
+          <tr><td class="num">2</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="2">×</button></td></tr>
+          <tr><td class="num">3</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="3">×</button></td></tr>
+          <tr><td class="num">4</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="4">×</button></td></tr>
+          <tr><td class="num">5</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="5">×</button></td></tr>
+          <tr><td class="num">6</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="6">×</button></td></tr>
+          <tr><td class="num">7</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="7">×</button></td></tr>
+          <tr><td class="num">8</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="8">×</button></td></tr>
+          <tr><td class="num">9</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="9">×</button></td></tr>
+          <tr><td class="num">10</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="10">×</button></td></tr>
+          <tr><td class="num">11</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="11">×</button></td></tr>
+          <tr><td class="num">12</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="12">×</button></td></tr>
+          <tr><td class="num">13</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="13">×</button></td></tr>
+          <tr><td class="num">14</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="14">×</button></td></tr>
+          <tr><td class="num">15</td><td><input class="cell-input" list="role-list"></td><td><textarea class="cell-input"></textarea></td><td><textarea class="cell-input"></textarea></td><td class="deadcell"><input type="checkbox" class="dead-checkbox"></td><td class="deletecell"><button class="delete-btn" data-row="15">×</button></td></tr>
         </tbody>
       </table>
     </section>
