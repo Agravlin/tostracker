@@ -37,6 +37,7 @@ function clearAssignment(playerNum) {
       const tr = td.closest("tr");
       tr.querySelector(".slot-num").textContent = "";
       tr.querySelector(".slot-claim").textContent = "";
+      tr.classList.remove("dead-slot");
     }
   });
   

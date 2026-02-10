@@ -12,6 +12,7 @@ body{
   margin:0;
   font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
   min-height:100vh;
+  color: var(--text);
   background:
     radial-gradient(
       1200px 600px at 20% -10%,
@@ -155,4 +156,9 @@ textarea.cell-input {
   padding: 2px 4px;
   line-height: 1.2;
   resize: vertical;
+}
+
+.role-table tr.dead-slot td{
+  text-decoration: line-through;
+  opacity: 0.6;
 }
