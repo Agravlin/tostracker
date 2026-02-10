@@ -11,21 +11,35 @@
 body{
   margin:0;
   font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  min-height:100vh;
+  background:
+    radial-gradient(
+      1200px 600px at 20% -10%,
+      #2f3f7a 0%,
+      transparent 60%
+    ),
+    linear-gradient(
+      180deg,
+      #12182f 0%,
+      #0b0b0d 100%
+    );
 }
 
 .app{
   max-width:1400px;
-  margin:30px auto;
-  padding:0 16px;
+  margin:0 auto;
+  padding:30px 16px;
+  min-height:100vh;
+  position:relative;
 }
+
 
 .topbar{
   display:flex;
   justify-content:space-between;
   align-items:center;
   margin-bottom:16px;
+  color:#c9d4ff;
 }
 
 .tables{
@@ -46,9 +60,10 @@ table{
   border-collapse:collapse;
 }
 
-th,td{
+th, td{
   border:1px solid var(--grid);
-  padding:8px;
+  padding:4px 6px;
+  line-height:1.2;
 }
 
 th{
