@@ -39,10 +39,38 @@ function clearAssignment(playerNum) {
       tr.querySelector(".slot-claim").textContent = "";
     }
   });
+  
+  const notFittingList = document.querySelector('.not-fitting-list');
+  if (notFittingList) {
+    const items = notFittingList.querySelectorAll('.not-fitting-item');
+    items.forEach(item => {
+      if (item.dataset.playerNum === String(playerNum)) {
+        item.remove();
+      }
+    });
+    
+    if (notFittingList.children.length === 0) {
+      document.querySelector('.not-fitting-section').style.display = 'none';
+    }
+  }
 }
 
-function showError(msg) {
-  alert(msg);
+function addToNotFitting(playerNum, claim) {
+  const notFittingSection = document.querySelector('.not-fitting-section');
+  const notFittingList = document.querySelector('.not-fitting-list');
+  
+  notFittingSection.style.display = 'block';
+  
+  const existing = notFittingList.querySelector(`[data-player-num="${playerNum}"]`);
+  if (existing) {
+    existing.querySelector('.claim-text').textContent = claim;
+  } else {
+    const item = document.createElement('div');
+    item.className = 'not-fitting-item';
+    item.dataset.playerNum = playerNum;
+    item.innerHTML = `<strong>#${playerNum}</strong>: <span class="claim-text">${claim}</span>`;
+    notFittingList.appendChild(item);
+  }
 }
 
 document.querySelectorAll('.tos-table tbody tr').forEach(row => {
@@ -75,7 +103,7 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
     }
 
     if (!target) {
-      showError("One of the claims is not true (no free slot for this claim).");
+      addToNotFitting(num, claim);
       return;
     }
 
@@ -96,8 +124,23 @@ document.querySelectorAll(".tos-table tbody tr").forEach(row => {
       row.classList.remove("dead");
       inputs.forEach(i => i.disabled = false);
     }
+    
+    reorderRows();
   });
 });
+
+function reorderRows() {
+  const tbody = document.querySelector('.tos-table tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  
+  const aliveRows = rows.filter(row => !row.classList.contains('dead') && !row.classList.contains('deleted'));
+  const deadRows = rows.filter(row => row.classList.contains('dead') && !row.classList.contains('deleted'));
+  const deletedRows = rows.filter(row => row.classList.contains('deleted'));
+  
+  [...aliveRows, ...deadRows, ...deletedRows].forEach(row => {
+    tbody.appendChild(row);
+  });
+}
 
 document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
   document.querySelectorAll(".tos-table tbody tr").forEach(row => {
@@ -168,4 +211,25 @@ undoBtn.addEventListener("click", () => {
   
   deletedRowState = null;
   undoBtn.disabled = true;
+});
+
+document.querySelectorAll('.tos-table tbody tr').forEach(row => {
+  const textareas = row.querySelectorAll('textarea.cell-input');
+  textareas.forEach(textarea => {
+    textarea.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      const colonIndex = pastedText.indexOf(':');
+      
+      const cleanedText = colonIndex !== -1 ? pastedText.substring(colonIndex + 1).trim() : pastedText;
+      
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentValue = textarea.value;
+      textarea.value = currentValue.substring(0, start) + cleanedText + currentValue.substring(end);
+      
+      const newPosition = start + cleanedText.length;
+      textarea.setSelectionRange(newPosition, newPosition);
+    });
+  });
 });
