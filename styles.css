@@ -133,6 +133,11 @@ th{
   background: #ff5555;
 }
 
+.col-dead{
+  text-align: center;
+  vertical-align: middle;
+}
+
 tr.deleted {
   display: none;
 }
