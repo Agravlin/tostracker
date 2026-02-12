@@ -118,6 +118,48 @@
 
   </section>
   </main>
+
+  <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
+    <div class="tutorial-backdrop"></div>
+    <div class="tutorial-modal">
+      <button class="tutorial-close" type="button">×</button>
+      <div class="tutorial-content">
+        <h2>How to Use the Tracker</h2>
+        <div class="tutorial-section">
+          <h3>📝 Main Table</h3>
+          <p>Track all 15 players in the game:</p>
+          <ul>
+            <li><strong>Claim:</strong> Enter the role each player claims</li>
+            <li><strong>Will:</strong> Note information from their will</li>
+            <li><strong>Info:</strong> Add any additional observations</li>
+            <li><strong>Confirmed:</strong> Check this box when a player's role is confirmed</li>
+          </ul>
+        </div>
+        <div class="tutorial-section">
+          <h3>📋 Role List</h3>
+          <p>The right panel automatically assigns claimed roles to the role list slots. Players are sorted with confirmed roles appearing first.</p>
+        </div>
+        <div class="tutorial-section">
+          <h3>🎯 Tips</h3>
+          <ul>
+            <li>If you're Town, enter your role at the start and mark yourself as confirmed</li>
+            <li>Mark revealed Mayors and dead players as confirmed</li>
+            <li>If you're Mafia, mark your teammates as confirmed to move them to the bottom</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="info-icon" type="button" title="Tutorial">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+        xmlns="http://www.w3.org/2000/svg">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+      <line x1="12" y1="10" x2="12" y2="16" stroke="currentColor" stroke-width="2"/>
+      <circle cx="12" cy="7" r="1.5" fill="currentColor"/>
+    </svg>
+  </button>
+
   <script src="script.js"></script>
 </body>
 </html>

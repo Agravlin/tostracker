@@ -332,3 +332,38 @@ function autoGrowTextarea(textarea) {
     textarea.style.height = scrollHeight + 'px';
   }
 }
+
+const tutorialOverlay = document.getElementById('tutorial-overlay');
+const tutorialBtn = document.querySelector('.info-icon');
+const tutorialClose = document.querySelector('.tutorial-close');
+const tutorialBackdrop = document.querySelector('.tutorial-backdrop');
+
+function showTutorial() {
+  if (tutorialOverlay) {
+    tutorialOverlay.style.display = 'block';
+  }
+}
+
+function hideTutorial() {
+  if (tutorialOverlay) {
+    tutorialOverlay.style.display = 'none';
+  }
+}
+
+if (tutorialBtn) {
+  tutorialBtn.addEventListener('click', showTutorial);
+}
+
+if (tutorialClose) {
+  tutorialClose.addEventListener('click', hideTutorial);
+}
+
+if (tutorialBackdrop) {
+  tutorialBackdrop.addEventListener('click', hideTutorial);
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && tutorialOverlay && tutorialOverlay.style.display !== 'none') {
+    hideTutorial();
+  }
+});
