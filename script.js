@@ -31,29 +31,61 @@ function findFreeRow(roleName) {
   return rows.find(r => !r.querySelector(".slot-num")?.textContent.trim());
 }
 
-function clearAssignment(playerNum) {
-  document.querySelectorAll(".role-table .slot-num").forEach(td => {
-    if (td.textContent.trim() === String(playerNum)) {
-      const tr = td.closest("tr");
-      tr.querySelector(".slot-num").textContent = "";
-      tr.querySelector(".slot-claim").textContent = "";
-      tr.classList.remove("dead-slot");
-    }
-  });
-  
+function reassignAllPlayers() {
+  document.querySelectorAll(".role-table .slot-num, .role-table .slot-claim")
+    .forEach(td => td.textContent = "");
+  document.querySelectorAll(".role-table tr.dead-slot")
+    .forEach(tr => tr.classList.remove("dead-slot"));
   const notFittingList = document.querySelector('.not-fitting-list');
   if (notFittingList) {
-    const items = notFittingList.querySelectorAll('.not-fitting-item');
-    items.forEach(item => {
-      if (item.dataset.playerNum === String(playerNum)) {
-        item.remove();
-      }
-    });
-    
-    if (notFittingList.children.length === 0) {
-      document.querySelector('.not-fitting-section').style.display = 'none';
-    }
+    notFittingList.innerHTML = '';
+    document.querySelector('.not-fitting-section').style.display = 'none';
   }
+
+  const players = [];
+  document.querySelectorAll('.tos-table tbody tr').forEach(row => {
+    const num = row.querySelector('.num').textContent.trim();
+    const claimInput = row.querySelector('input[list="role-list"]');
+    const claim = claimInput.value.trim();
+    const isDead = row.querySelector('.dead-checkbox').checked;
+    
+    if (claim) {
+      const matchedRole = Object.keys(primarySlot).find(
+        role => role.toLowerCase() === claim.toLowerCase()
+      );
+      const finalClaim = matchedRole || claim;
+      const main = primarySlot[finalClaim];
+      
+      if (main) {
+        players.push({ num, claim: finalClaim, isDead, main });
+      }
+    }
+  });
+
+  players.sort((a, b) => {
+    if (a.isDead && !b.isDead) return -1;
+    if (!a.isDead && b.isDead) return 1;
+    return parseInt(a.num) - parseInt(b.num);
+  });
+
+  players.forEach(player => {
+    let target = findFreeRow(player.main);
+    
+    if (!target) {
+      const fb = fallbackSlot[player.main];
+      if (fb) target = findFreeRow(fb);
+    }
+
+    if (target) {
+      target.querySelector(".slot-num").textContent = player.num;
+      target.querySelector(".slot-claim").textContent = player.claim;
+      if (player.isDead) {
+        target.classList.add('dead-slot');
+      }
+    } else {
+      addToNotFitting(player.num, player.claim);
+    }
+  });
 }
 
 function addToNotFitting(playerNum, claim) {
@@ -81,10 +113,7 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
 
   const updateAssignment = () => {
     let claim = claimInput.value.trim();
-    if (!claim) { clearAssignment(num); return; }
-
-    clearAssignment(num);
-
+    
     const matchedRole = Object.keys(primarySlot).find(
       role => role.toLowerCase() === claim.toLowerCase()
     );
@@ -94,70 +123,7 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
       claimInput.value = matchedRole;
     }
 
-    const main = primarySlot[claim];
-    if (!main) return;
-
-    const isDead = deadCheckbox.checked;
-    let target = findFreeRow(main);
-
-    if (isDead && !target) {
-      const occupiedRows = [...document.querySelectorAll(`.role-table tbody tr[data-role="${main}"]`)];
-      const occupiedByAlive = occupiedRows.find(r => {
-        const slotNum = r.querySelector(".slot-num")?.textContent.trim();
-        if (!slotNum) return false;
-        const allTosRows = document.querySelectorAll('.tos-table tbody tr');
-        for (let tosRow of allTosRows) {
-          const rowNum = tosRow.querySelector('.num').textContent.trim();
-          const isDeadRow = tosRow.querySelector('.dead-checkbox').checked;
-          if (rowNum === slotNum && !isDeadRow) {
-            return true;
-          }
-        }
-        return false;
-      });
-      
-      if (occupiedByAlive) {
-        const occupiedSlotNum = occupiedByAlive.querySelector(".slot-num").textContent.trim();
-        const occupiedClaim = occupiedByAlive.querySelector(".slot-claim").textContent.trim();
-        
-        occupiedByAlive.querySelector(".slot-num").textContent = "";
-        occupiedByAlive.querySelector(".slot-claim").textContent = "";
-        
-        const fb = fallbackSlot[main];
-        if (fb) {
-          const fallbackTarget = findFreeRow(fb);
-          if (fallbackTarget) {
-            fallbackTarget.querySelector(".slot-num").textContent = occupiedSlotNum;
-            fallbackTarget.querySelector(".slot-claim").textContent = occupiedClaim;
-          } else {
-            addToNotFitting(occupiedSlotNum, occupiedClaim);
-          }
-        } else {
-          addToNotFitting(occupiedSlotNum, occupiedClaim);
-        }
-        
-        target = occupiedByAlive;
-      }
-    }
-
-    if (!target) {
-      const fb = fallbackSlot[main];
-      if (fb) target = findFreeRow(fb);
-    }
-
-    if (!target) {
-      addToNotFitting(num, claim);
-      return;
-    }
-
-    target.querySelector(".slot-num").textContent = num;
-    target.querySelector(".slot-claim").textContent = claim;
-    
-    if (isDead) {
-      target.classList.add('dead-slot');
-    } else {
-      target.classList.remove('dead-slot');
-    }
+    reassignAllPlayers();
   };
 
   claimInput.addEventListener('input', updateAssignment);
@@ -236,9 +202,9 @@ function reorderRows() {
 
 document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
   document.querySelectorAll(".tos-table tbody tr").forEach(row => {
-    row.querySelectorAll("input.cell-input").forEach(i => {
-      i.value = "";
-      i.disabled = false;
+    row.querySelectorAll("input.cell-input, textarea.cell-input").forEach(input => {
+      input.value = "";
+      input.disabled = false;
     });
 
     const cb = row.querySelector(".dead-checkbox");
@@ -246,10 +212,14 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
 
     row.classList.remove("dead");
     row.classList.remove("deleted");
+    delete row.dataset.originalPosition;
   });
 
   document.querySelectorAll(".role-table .slot-num, .role-table .slot-claim")
     .forEach(td => td.textContent = "");
+
+  document.querySelectorAll(".role-table tr.dead-slot")
+    .forEach(tr => tr.classList.remove("dead-slot"));
   
   const notFittingList = document.querySelector('.not-fitting-list');
   if (notFittingList) {
@@ -259,6 +229,15 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
   
   deletedRowState = null;
   undoBtn.disabled = true;
+  
+  const tbody = document.querySelector('.tos-table tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  rows.sort((a, b) => {
+    const numA = parseInt(a.querySelector('.num').textContent.trim());
+    const numB = parseInt(b.querySelector('.num').textContent.trim());
+    return numA - numB;
+  });
+  rows.forEach(row => tbody.appendChild(row));
 });
 
 document.querySelectorAll(".delete-btn").forEach(btn => {
@@ -277,9 +256,9 @@ document.querySelectorAll(".delete-btn").forEach(btn => {
       isDead: row.classList.contains("dead")
     };
     
-    clearAssignment(rowNum);
-    
     row.classList.add("deleted");
+    
+    reassignAllPlayers();
     
     undoBtn.disabled = false;
   });
