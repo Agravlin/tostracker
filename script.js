@@ -23,9 +23,6 @@ const fallbackSlot = {
   "Town Protective": "Random Town",
 };
 
-let deletedRowState = null;
-const undoBtn = document.querySelector('.btn-undo');
-
 function findFreeRow(roleName) {
   const rows = [...document.querySelectorAll(`.role-table tbody tr[data-role="${roleName}"]`)];
   return rows.find(r => !r.querySelector(".slot-num")?.textContent.trim());
@@ -191,11 +188,10 @@ function reorderRows() {
   const tbody = document.querySelector('.tos-table tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
   
-  const aliveRows = rows.filter(row => !row.classList.contains('dead') && !row.classList.contains('deleted'));
-  const deadRows = rows.filter(row => row.classList.contains('dead') && !row.classList.contains('deleted'));
-  const deletedRows = rows.filter(row => row.classList.contains('deleted'));
+  const aliveRows = rows.filter(row => !row.classList.contains('dead'));
+  const deadRows = rows.filter(row => row.classList.contains('dead'));
   
-  [...aliveRows, ...deadRows, ...deletedRows].forEach(row => {
+  [...aliveRows, ...deadRows].forEach(row => {
     tbody.appendChild(row);
   });
 }
@@ -211,7 +207,6 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
     cb.checked = false;
 
     row.classList.remove("dead");
-    row.classList.remove("deleted");
     delete row.dataset.originalPosition;
   });
 
@@ -227,9 +222,6 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
     document.querySelector('.not-fitting-section').style.display = 'none';
   }
   
-  deletedRowState = null;
-  undoBtn.disabled = true;
-  
   const tbody = document.querySelector('.tos-table tbody');
   const rows = Array.from(tbody.querySelectorAll('tr'));
   rows.sort((a, b) => {
@@ -238,56 +230,6 @@ document.querySelector(".btn.btn-ghost").addEventListener("click", () => {
     return numA - numB;
   });
   rows.forEach(row => tbody.appendChild(row));
-});
-
-document.querySelectorAll(".delete-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const rowNum = btn.getAttribute("data-row");
-    const row = btn.closest("tr");
-    
-    const inputs = row.querySelectorAll("input.cell-input, textarea.cell-input");
-    const deadCheckbox = row.querySelector(".dead-checkbox");
-    
-    deletedRowState = {
-      rowNum: rowNum,
-      row: row,
-      values: Array.from(inputs).map(input => input.value),
-      deadChecked: deadCheckbox.checked,
-      isDead: row.classList.contains("dead")
-    };
-    
-    row.classList.add("deleted");
-    
-    reassignAllPlayers();
-    
-    undoBtn.disabled = false;
-  });
-});
-
-undoBtn.addEventListener("click", () => {
-  if (!deletedRowState) return;
-  
-  const { row, values, deadChecked, isDead, rowNum } = deletedRowState;
-  
-  row.classList.remove("deleted");
-  
-  const inputs = row.querySelectorAll("input.cell-input, textarea.cell-input");
-  inputs.forEach((input, idx) => {
-    input.value = values[idx];
-  });
-  
-  const deadCheckbox = row.querySelector(".dead-checkbox");
-  deadCheckbox.checked = deadChecked;
-  if (isDead) {
-    row.classList.add("dead");
-    inputs.forEach(i => i.disabled = true);
-  }
-  
-  const claimInput = row.querySelector('input[list="role-list"]');
-  claimInput.dispatchEvent(new Event('input'));
-  
-  deletedRowState = null;
-  undoBtn.disabled = true;
 });
 
 document.querySelectorAll('.tos-table tbody tr').forEach(row => {
