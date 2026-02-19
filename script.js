@@ -309,3 +309,83 @@ document.addEventListener('keydown', (e) => {
     hideTutorial();
   }
 });
+
+function saveState() {
+  const state = [];
+  document.querySelectorAll('.tos-table tbody tr').forEach(row => {
+    const claimInput = row.querySelector('input[list="role-list"]');
+    const textareas = row.querySelectorAll('textarea.cell-input');
+    const checkbox = row.querySelector('.dead-checkbox');
+    state.push({
+      num: row.querySelector('.num').textContent.trim(),
+      claim: claimInput ? claimInput.value : '',
+      will: textareas[0] ? textareas[0].value : '',
+      info: textareas[1] ? textareas[1].value : '',
+      isDead: checkbox ? checkbox.checked : false,
+    });
+  });
+  try {
+    localStorage.setItem('tos-tracker-state', JSON.stringify(state));
+  } catch (e) {
+    // ignore storage errors (e.g. private browsing quota)
+  }
+}
+
+function loadState() {
+  let saved;
+  try {
+    saved = localStorage.getItem('tos-tracker-state');
+  } catch (e) {
+    return;
+  }
+  if (!saved) return;
+  let state;
+  try {
+    state = JSON.parse(saved);
+  } catch (e) {
+    return;
+  }
+  if (!Array.isArray(state)) return;
+
+  const rowMap = {};
+  document.querySelectorAll('.tos-table tbody tr').forEach(row => {
+    const num = row.querySelector('.num').textContent.trim();
+    rowMap[num] = row;
+  });
+
+  state.forEach(entry => {
+    const row = rowMap[entry.num];
+    if (!row) return;
+    const claimInput = row.querySelector('input[list="role-list"]');
+    const textareas = row.querySelectorAll('textarea.cell-input');
+    const checkbox = row.querySelector('.dead-checkbox');
+    if (claimInput) claimInput.value = entry.claim || '';
+    if (textareas[0]) {
+      textareas[0].value = entry.will || '';
+      autoGrowTextarea(textareas[0]);
+    }
+    if (textareas[1]) {
+      textareas[1].value = entry.info || '';
+      autoGrowTextarea(textareas[1]);
+    }
+    if (checkbox && entry.isDead && !checkbox.checked) {
+      checkbox.checked = true;
+      checkbox.dispatchEvent(new Event('change'));
+    }
+  });
+  reassignAllPlayers();
+}
+
+document.querySelectorAll('.tos-table tbody tr').forEach(row => {
+  row.querySelectorAll('input.cell-input, textarea.cell-input').forEach(input => {
+    input.addEventListener('input', saveState);
+  });
+  const checkbox = row.querySelector('.dead-checkbox');
+  if (checkbox) checkbox.addEventListener('change', saveState);
+});
+
+document.querySelector('.btn.btn-ghost').addEventListener('click', () => {
+  try { localStorage.removeItem('tos-tracker-state'); } catch (e) {}
+});
+
+loadState();
