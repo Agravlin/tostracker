@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self';" />
   <title>Town of Salem Tracker</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
@@ -98,18 +99,18 @@
           <tr><th>Role List</th> <th>#</th> <th>Claim</th></tr>
         </thead>
         <tbody>
-          <tr data-role="Jailor"><td><span style="color:#3cff3c;font-weight:600;">Jailor</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Town Investigative"><td><span style="color:#3cff3c;">Town</span> <span style="color:#4aa3ff;">Investigative</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Town Investigative"><td><span style="color:#3cff3c;">Town</span> <span style="color:#4aa3ff;">Investigative</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Town Protective"><td><span style="color:#3cff3c;">Town</span> <span style="color:#4aa3ff;">Protective</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Random Town"><td><span style="color:#4aa3ff;">Random</span> <span style="color:#3cff3c;">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Random Town"><td><span style="color:#4aa3ff;">Random</span> <span style="color:#3cff3c;">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Random Town"><td><span style="color:#4aa3ff;">Random</span> <span style="color:#3cff3c;">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Random Town"><td><span style="color:#4aa3ff;">Random</span> <span style="color:#3cff3c;">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
-          <tr data-role="Random Town"><td><span style="color:#4aa3ff;">Random</span> <span style="color:#3cff3c;">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Jailor"><td><span class="role-green-bold">Jailor</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Town Investigative"><td><span class="role-green">Town</span> <span class="role-blue">Investigative</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Town Investigative"><td><span class="role-green">Town</span> <span class="role-blue">Investigative</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Town Protective"><td><span class="role-green">Town</span> <span class="role-blue">Protective</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Random Town"><td><span class="role-blue">Random</span> <span class="role-green">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Random Town"><td><span class="role-blue">Random</span> <span class="role-green">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Random Town"><td><span class="role-blue">Random</span> <span class="role-green">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Random Town"><td><span class="role-blue">Random</span> <span class="role-green">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
+          <tr data-role="Random Town"><td><span class="role-blue">Random</span> <span class="role-green">Town</span></td><td class="slot-num"></td><td class="slot-claim"></td></tr>
         </tbody>
       </table>
-      <div class="not-fitting-section" style="display: none;">
+      <div class="not-fitting-section">
         <div class="not-fitting-header">Not Fitting:</div>
         <div class="not-fitting-list"></div>
       </div>
@@ -118,7 +119,7 @@
   </section>
   </main>
 
-  <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
+  <div id="tutorial-overlay" class="tutorial-overlay">
     <div class="tutorial-backdrop"></div>
     <div class="tutorial-modal">
       <button class="tutorial-close" type="button">×</button>

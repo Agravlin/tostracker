@@ -98,7 +98,14 @@ function addToNotFitting(playerNum, claim) {
     const item = document.createElement('div');
     item.className = 'not-fitting-item';
     item.dataset.playerNum = playerNum;
-    item.innerHTML = `<strong>#${playerNum}</strong>: <span class="claim-text">${claim}</span>`;
+    const strong = document.createElement('strong');
+    strong.textContent = `#${playerNum}`;
+    const span = document.createElement('span');
+    span.className = 'claim-text';
+    span.textContent = claim;
+    item.appendChild(strong);
+    item.appendChild(document.createTextNode(': '));
+    item.appendChild(span);
     notFittingList.appendChild(item);
   }
 }

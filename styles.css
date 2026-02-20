@@ -259,3 +259,10 @@ textarea.cell-input {
 .info-icon:hover {
   color: #4aa3ff;
 }
+
+.role-green { color: #3cff3c; }
+.role-green-bold { color: #3cff3c; font-weight: 600; }
+.role-blue  { color: #4aa3ff; }
+
+#tutorial-overlay    { display: none; }
+.not-fitting-section { display: none; }
