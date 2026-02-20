@@ -111,58 +111,39 @@ function addToNotFitting(playerNum, claim) {
 }
 
 document.querySelectorAll('.tos-table tbody tr').forEach(row => {
-  const num = row.querySelector('.num').textContent.trim();
   const claimInput = row.querySelector('input[list="role-list"]');
-  const deadCheckbox = row.querySelector('.dead-checkbox');
-
-  const updateAssignment = () => {
-    let claim = claimInput.value.trim();
-    
-    const matchedRole = Object.keys(primarySlot).find(
-      role => role.toLowerCase() === claim.toLowerCase()
-    );
-    
-    if (matchedRole) {
-      claim = matchedRole;
-      claimInput.value = matchedRole;
-    }
-
-    reassignAllPlayers();
-  };
-
-  claimInput.addEventListener('input', updateAssignment);
-  deadCheckbox.addEventListener('change', updateAssignment);
-});
-
-document.querySelectorAll(".tos-table tbody tr").forEach(row => {
   const checkbox = row.querySelector(".dead-checkbox");
   const inputs = row.querySelectorAll("input.cell-input");
+
+  claimInput.addEventListener('input', () => {
+    const matchedRole = Object.keys(primarySlot).find(
+      role => role.toLowerCase() === claimInput.value.trim().toLowerCase()
+    );
+    if (matchedRole) {
+      claimInput.value = matchedRole;
+    }
+    reassignAllPlayers();
+  });
 
   checkbox.addEventListener("change", () => {
     if (checkbox.checked) {
       const tbody = document.querySelector('.tos-table tbody');
       const allRows = Array.from(tbody.querySelectorAll('tr'));
       row.dataset.originalPosition = allRows.indexOf(row);
-      
+
       row.classList.add("dead");
       inputs.forEach(i => i.disabled = true);
-      
+
       reorderRows();
-      
-      const claimInput = row.querySelector('input[list="role-list"]');
-      if (claimInput.value.trim()) {
-        claimInput.dispatchEvent(new Event('input'));
-      }
+
+      reassignAllPlayers();
     } else {
       row.classList.remove("dead");
       inputs.forEach(i => i.disabled = false);
-      
+
       restoreOriginalPosition(row);
-      
-      const claimInput = row.querySelector('input[list="role-list"]');
-      if (claimInput.value.trim()) {
-        claimInput.dispatchEvent(new Event('input'));
-      }
+
+      reassignAllPlayers();
     }
   });
 });
@@ -244,7 +225,7 @@ document.querySelectorAll('.tos-table tbody tr').forEach(row => {
   textareas.forEach(textarea => {
     textarea.addEventListener('paste', (e) => {
       e.preventDefault();
-      const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+      const pastedText = e.clipboardData.getData('text');
       const colonIndex = pastedText.indexOf(':');
       
       const cleanedText = colonIndex !== -1 ? pastedText.substring(colonIndex + 1).trim() : pastedText;
